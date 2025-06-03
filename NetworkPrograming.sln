@@ -18,7 +18,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Debug|x64.Build.0 = Debug|Any CPU
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -30,6 +29,7 @@ Global
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{2DC87314-EEAB-4812-A92F-D618AF08F4EC}.Release|x86.Build.0 = Release|Any CPU
 		{ED72FA6F-2FC5-4EBF-95A2-73BA08D39ACB}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{ED72FA6F-2FC5-4EBF-95A2-73BA08D39ACB}.Debug|Any CPU.Build.0 = Debug|Win32
 		{ED72FA6F-2FC5-4EBF-95A2-73BA08D39ACB}.Debug|x64.ActiveCfg = Debug|x64
 		{ED72FA6F-2FC5-4EBF-95A2-73BA08D39ACB}.Debug|x64.Build.0 = Debug|x64
 		{ED72FA6F-2FC5-4EBF-95A2-73BA08D39ACB}.Debug|x86.ActiveCfg = Debug|Win32
