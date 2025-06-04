@@ -71,7 +71,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				DWORD dwIPprefix = atoi(szIPprefix);
 				dwIPmask <<= (32 - dwIPprefix);
 				SendMessage(hIPmask, IPM_SETADDRESS, 0, dwIPmask);
-				SetIPPrefix(hwnd);
+				//SetIPPrefix(hwnd);
 				//PrintInfo();
 			}
 		}
@@ -133,12 +133,12 @@ VOID PrintInfo(HWND hwnd)
 	CHAR sz_buffer[SIZE]{};
 	CHAR sz_NetwordcIP_buffer[SIZE];
 	CHAR sz_BroadcastIP_buffer[SIZE];
-	CHAR sz_NumberOfIPs[5];
+	CHAR sz_NumberOfIPs[SIZE];
 	CHAR sz_Prefix[3];
 	HWND hIPaddress = GetDlgItem(hwnd, IDC_IPADDRESS);
+	HWND hIPmask = GetDlgItem(hwnd, IDC_IPMASK);
 	HWND hEditPrefix = GetDlgItem(hwnd, IDC_EDIT_PREFIX);
 	HWND hStaticInfo = GetDlgItem(hwnd, IDC_STATIC_INFO);
-	HWND hIPmask = GetDlgItem(hwnd, IDC_IPMASK);
 	
 	
 	DWORD dwIPaddress = 0;
@@ -152,7 +152,9 @@ VOID PrintInfo(HWND hwnd)
 
 	sprintf(sz_NetwordcIP_buffer, "јдрес сети:\t\t\t %s", IPaddressToString(dwIPaddress & dwIPmask, sz_buffer));
 	sprintf(sz_BroadcastIP_buffer, "Ўироковещательный адрес: %s", IPaddressToString(dwIPaddress | ~dwIPmask, sz_buffer));
+
 	sprintf(sz_info, "%s\n%s", sz_NetwordcIP_buffer, sz_BroadcastIP_buffer);
+
 	SendMessage(hStaticInfo, WM_SETTEXT, 0, (LPARAM)sz_info);
 }
 CHAR* IPaddressToString(DWORD dwIpaddress,CHAR sz_IPaddress[])
