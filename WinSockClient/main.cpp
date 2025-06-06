@@ -1,0 +1,65 @@
+#pragma warning(disable:4326)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+
+#endif // !WIN32_LEAN_AND_MEAN
+
+
+#include<Windows.h>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include<stdio.h>
+#include <iphlpapi.h>
+#include <iostream>
+#pragma comment (lib,"Ws2_32.lib")
+#define DEFAULT_PORT "27016"
+#define DEFAULT_BUFLEN 1024
+using namespace std;
+
+void main()
+{	
+	WSAData wsaData;
+	INT iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	addrinfo hints;
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	addrinfo* result = NULL;
+	iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+	if (iResult != 0)
+	{
+		cout << "GetAddrinfo faled:" << iResult<< endl;
+		WSACleanup();
+		return;
+	}
+	SOCKET ConnectSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+	if (ConnectSocket == INVALID_SOCKET)
+	{
+		cout << "Socket creation failed with code:" << WSAGetLastError() << endl;
+		freeaddrinfo(result);
+		WSACleanup();
+		return;
+	}
+	iResult = connect(ConnectSocket, result->ai_addr, result->ai_addrlen);
+	if (iResult == SOCKET_ERROR)
+	{
+		cout << "Unable to connect to server : " << endl;
+		closesocket(ConnectSocket);
+		freeaddrinfo(result);
+		WSACleanup();
+		return;
+	}
+	INT recvbufflen = DEFAULT_BUFLEN;
+	const char *sendbuf = "hthis is a test";
+	iResult = send(ConnectSocket, sendbuf, strlen(sendbuf), 0);
+	if (iResult == SOCKET_ERROR)
+	{
+		cout <<  "Send faled  :" << WSAGetLastError()<< endl;
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return;
+	}
+	cout << " Send complited " << endl;
+}
