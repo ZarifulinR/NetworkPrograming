@@ -21,13 +21,13 @@ using namespace std;
 void main()
 {
 	setlocale(LC_ALL, "");
-	cout << " Hello Server \n "  << endl;;
+	cout << " Hello Server \n " << endl;;
 	WSAData wsaData;
 	int iResult;
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0)
 	{
-		cout << "WSAStartup failed: %d\n"<< iResult << endl;;
+		cout << "WSAStartup failed: %d\n" << iResult << endl;;
 		return;
 	}
 	addrinfo hints;
@@ -46,7 +46,7 @@ void main()
 		return;
 	}
 
-	
+
 
 	SOCKET  ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (ListenSocket == INVALID_SOCKET)
@@ -56,11 +56,11 @@ void main()
 		WSACleanup();
 		return;
 	}
-	 
+
 	iResult = bind(ListenSocket, result->ai_addr, result->ai_addrlen);
 	if (iResult == SOCKET_ERROR)
 	{
-		cout <<"bind failed with error: %d\n", WSAGetLastError();
+		cout << "bind failed with error: %d\n", WSAGetLastError();
 		freeaddrinfo(result);
 		closesocket(ListenSocket);
 		WSACleanup();
@@ -85,16 +85,17 @@ void main()
 		if (iResult > 0)
 		{
 			cout << "bytes received " << iResult << endl;
-			cout << " Message:" << recvbuf << endl;
+			cout << " Message: " << recvbuf << endl;
 			CHAR sz_responce[] = " Hello I am Server!";
-			INT iSendResult = send(ClientSoket, "Hello i am Server", iResult, 0);
+			//INT iSendResult = send(ClientSoket, "Hello i am Server", strlen(recvbuf), 0);
+			INT iSendResult = send(ClientSoket, recvbuf, strlen(recvbuf), 0);
 			if (iSendResult == SOCKET_ERROR)
 			{
 				cout << "Error Send failed hith code: " << WSAGetLastError() << endl;
 				closesocket(ClientSoket);
 				closesocket(ListenSocket);
 				freeaddrinfo(result);
-				WSACleanup(); 
+				WSACleanup();
 				return;
 			}
 			cout << "Bytes sent: " << iSendResult << endl;
@@ -108,11 +109,13 @@ void main()
 		{
 			cout << " Error recv() failed with code" << WSAGetLastError() << endl;
 			closesocket(ClientSoket);
+			//return;
 
 		}
 
-	} while (iResult>0);
-	/*closesocket(ListenSocket);
-	freeaddrinfo(result);
-	WSACleanup();*/
-}	
+	} while (iResult > 0);
+			closesocket(ListenSocket);
+			freeaddrinfo(result);
+			WSACleanup();
+}
+//VOID HandleClient(SOCKET)

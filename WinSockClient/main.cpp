@@ -17,7 +17,7 @@
 using namespace std;
 
 void main()
-{	
+{
 	setlocale(LC_ALL, "");
 	cout << "Hello Client" << endl;;
 	cout << "Helloo  " << endl;
@@ -33,7 +33,7 @@ void main()
 	iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
 	if (iResult != 0)
 	{
-		cout << "GetAddrinfo faled: " << iResult<< endl;
+		cout << "GetAddrinfo faled: " << iResult << endl;
 		WSACleanup();
 		return;
 	}
@@ -54,29 +54,33 @@ void main()
 		WSACleanup();
 		return;
 	}
-	INT recvbufflen = DEFAULT_BUFLEN;
-	const char *sendbuf = "  Hello i am Client ";
-	iResult = send(ConnectSocket, sendbuf, strlen(sendbuf), 0);
-	if (iResult == SOCKET_ERROR)
-	{
-		cout <<  "Send faled: " << WSAGetLastError()<< endl;
-		closesocket(ConnectSocket);
-		freeaddrinfo(result);
-		WSACleanup();
-		return;
-	}
-	cout << " Send complited " << endl;
+	CHAR sendbuf[DEFAULT_BUFLEN] = "  Hello i am Client ";
+	
 	CHAR recvbuffer[DEFAULT_BUFLEN] = {};
 	do
 	{
+		ZeroMemory(recvbuffer, sizeof(recvbuffer));
+		iResult = send(ConnectSocket, sendbuf, strlen(sendbuf), 0);
+		if (iResult == SOCKET_ERROR)
+		{
+			cout << "Send faled: " << WSAGetLastError() << endl;
+			closesocket(ConnectSocket);
+			freeaddrinfo(result);
+			WSACleanup();
+			return;
+		}
+		cout << " Send complited " << endl;
+
 		iResult = recv(ConnectSocket, recvbuffer, DEFAULT_BUFLEN, 0);
-		if (iResult > 0)cout << " Bytes received: " << iResult<< "  Message: "<<recvbuffer << endl;
+		if (iResult > 0)cout << " Bytes received: " << iResult << "  Message: " << recvbuffer << endl;
 		else if (iResult == 0)cout << "Connection closed " << endl;
 		else cout << "receive failed with code: " << WSAGetLastError() << endl;
-	} while (iResult>0);
+				cout << "¬ведите сообщение:  "; cin.getline(sendbuf, DEFAULT_BUFLEN) ;
+
+	} while (iResult > 0 && strcmp(sendbuf,"Exit"));
 	iResult = shutdown(ConnectSocket, SD_SEND);
 	closesocket(ConnectSocket);
 	freeaddrinfo(result);
 	WSACleanup();
-	
+	system("PAUSE");
 }
