@@ -18,6 +18,9 @@ using namespace std;
 
 void main()
 {	
+	setlocale(LC_ALL, "");
+	cout << "Hello Client" << endl;;
+	cout << "Helloo  " << endl;
 	WSAData wsaData;
 	INT iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	addrinfo hints;
@@ -30,14 +33,14 @@ void main()
 	iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
 	if (iResult != 0)
 	{
-		cout << "GetAddrinfo faled:" << iResult<< endl;
+		cout << "GetAddrinfo faled: " << iResult<< endl;
 		WSACleanup();
 		return;
 	}
 	SOCKET ConnectSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (ConnectSocket == INVALID_SOCKET)
 	{
-		cout << "Socket creation failed with code:" << WSAGetLastError() << endl;
+		cout << "Socket creation failed with code: " << WSAGetLastError() << endl;
 		freeaddrinfo(result);
 		WSACleanup();
 		return;
@@ -45,21 +48,35 @@ void main()
 	iResult = connect(ConnectSocket, result->ai_addr, result->ai_addrlen);
 	if (iResult == SOCKET_ERROR)
 	{
-		cout << "Unable to connect to server : " << endl;
+		cout << "Unable to connect to server: " << endl;
 		closesocket(ConnectSocket);
 		freeaddrinfo(result);
 		WSACleanup();
 		return;
 	}
 	INT recvbufflen = DEFAULT_BUFLEN;
-	const char *sendbuf = "hthis is a test";
+	const char *sendbuf = "  Hello i am Client ";
 	iResult = send(ConnectSocket, sendbuf, strlen(sendbuf), 0);
 	if (iResult == SOCKET_ERROR)
 	{
-		cout <<  "Send faled  :" << WSAGetLastError()<< endl;
+		cout <<  "Send faled: " << WSAGetLastError()<< endl;
 		closesocket(ConnectSocket);
+		freeaddrinfo(result);
 		WSACleanup();
 		return;
 	}
 	cout << " Send complited " << endl;
+	CHAR recvbuffer[DEFAULT_BUFLEN] = {};
+	do
+	{
+		iResult = recv(ConnectSocket, recvbuffer, DEFAULT_BUFLEN, 0);
+		if (iResult > 0)cout << " Bytes received: " << iResult<< "  Message: "<<recvbuffer << endl;
+		else if (iResult == 0)cout << "Connection closed " << endl;
+		else cout << "receive failed with code: " << WSAGetLastError() << endl;
+	} while (iResult>0);
+	iResult = shutdown(ConnectSocket, SD_SEND);
+	closesocket(ConnectSocket);
+	freeaddrinfo(result);
+	WSACleanup();
+	
 }

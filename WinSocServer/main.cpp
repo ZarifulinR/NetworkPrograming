@@ -84,20 +84,20 @@ void main()
 		iResult = recv(ClientSoket, recvbuf, recv_buffer_lenth, 0);
 		if (iResult > 0)
 		{
-			cout << "bytes received" << iResult << endl;
+			cout << "bytes received " << iResult << endl;
 			cout << " Message:" << recvbuf << endl;
-			CHAR sz_responce[] = "Hello I am Server!";
-			INT iSendResult = send(ClientSoket, recvbuf, strlen(recvbuf), 0);
+			CHAR sz_responce[] = " Hello I am Server!";
+			INT iSendResult = send(ClientSoket, "Hello i am Server", iResult, 0);
 			if (iSendResult == SOCKET_ERROR)
 			{
-				cout << "Error Send failed hith code:" << WSAGetLastError() << endl;
+				cout << "Error Send failed hith code: " << WSAGetLastError() << endl;
 				closesocket(ClientSoket);
 				closesocket(ListenSocket);
 				freeaddrinfo(result);
 				WSACleanup(); 
 				return;
 			}
-			cout << "Bytes sent:" << iSendResult << endl;
+			cout << "Bytes sent: " << iSendResult << endl;
 		}
 		else if (iResult == 0)
 		{
@@ -112,7 +112,7 @@ void main()
 		}
 
 	} while (iResult>0);
-	closesocket(ListenSocket);
+	/*closesocket(ListenSocket);
 	freeaddrinfo(result);
-	WSACleanup();
+	WSACleanup();*/
 }	
