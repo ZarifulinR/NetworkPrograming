@@ -10,6 +10,8 @@
 #include<stdio.h>
 #include <iphlpapi.h>
 #include <iostream>
+#include<thread>
+#include<vector>
 
 using namespace std;
 
@@ -75,9 +77,38 @@ void main()
 		WSACleanup();
 		return;
 	}
+
+
+
+
+	//SOCKET ClientSoket = accept(ListenSocket, NULL, NULL);
+
+	VOID WINAPI HandleClient(SOCKET ClientSoket);
+	CONST INT MAX_CLIENTS = 5;
+	SOCKET clients[MAX_CLIENTS] = {};
+	DWORD dwThreadIDs[MAX_CLIENTS] = {};
+	HANDLE hTreads[MAX_CLIENTS] = {};
+
+	INT i = 0;
+	while (i < 5)
+	{
+		SOCKET ClientSoket = accept(ListenSocket, NULL, NULL);
+		clients[i] = ClientSoket;
+		hTreads[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)HandleClient, (LPVOID)clients[i], 0, &dwThreadIDs[i]);
+		i++;
+
+	}
+	//HandleClient(ClientSoket);
+	closesocket(ListenSocket);
+	freeaddrinfo(result);
+	WSACleanup();
+}
+VOID WINAPI HandleClient(SOCKET ClientSoket)
+{
+	INT iResult = 0;
 	CHAR recvbuf[DEFAULT_BUFFLEN];
 	int recv_buffer_lenth = DEFAULT_BUFFLEN;
-	SOCKET ClientSoket = accept(ListenSocket, NULL, NULL);
+
 	do
 	{
 		ZeroMemory(recvbuf, sizeof(recvbuf));
@@ -93,9 +124,9 @@ void main()
 			{
 				cout << "Error Send failed hith code: " << WSAGetLastError() << endl;
 				closesocket(ClientSoket);
-				closesocket(ListenSocket);
-				freeaddrinfo(result);
-				WSACleanup();
+				//closesocket(ListenSocket);
+				//freeaddrinfo(result);
+				//WSACleanup();
 				return;
 			}
 			cout << "Bytes sent: " << iSendResult << endl;
@@ -114,8 +145,5 @@ void main()
 		}
 
 	} while (iResult > 0);
-			closesocket(ListenSocket);
-			freeaddrinfo(result);
-			WSACleanup();
+
 }
-//VOID HandleClient(SOCKET)
